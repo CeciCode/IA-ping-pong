@@ -18,6 +18,9 @@ pcscore = 0;
 
 audio1 = '';
 
+rightWristX= 0;
+rightWristY= 0;
+scoreRightWrist= 0;
 
 //Coordenadas x, y, raio, velocidade em x e velocidade em y
 ball = {
@@ -30,11 +33,34 @@ ball = {
 
 function setup(){
   canvas =  createCanvas(700,550);
+  canvas.parent('canvas');
+  video= createCapture(700, 550);
+  video.hide();
+  poseNet= ml5.poseNet(video, modelLoaded);
+  poseNet.on('pose', gotPoses);
 }
 
+function modelLoaded() {
+  console.log("pose net carregado");
+}
+
+function gotPoses(results) {
+	if(results.length > 0) {
+		console.log(results);
+    rightWristX= results[0].pose.rightWrist.x;
+    rightWristY= results[0].pose.rightWrist.y;
+    scoreRightWrist= results[0].pose.keypoints[10].score;
+	}
+}
 
 function draw(){
 
+  if(scoreRightWrist > 0.2) {
+    fill("pink");
+    stroke("purple");
+    circle(rightWristX, rightWristY, 20);
+  }
+  
   background(0); 
 
   fill("black");
