@@ -22,6 +22,8 @@ rightWristX= 0;
 rightWristY= 0;
 scoreRightWrist= 0;
 
+game_status = "";
+
 //Coordenadas x, y, raio, velocidade em x e velocidade em y
 ball = {
     x:350/2,
@@ -52,15 +54,18 @@ function gotPoses(results) {
     scoreRightWrist= results[0].pose.keypoints[10].score;
 	}
 }
+function startGame() {
+  game_status= "start";
+  document.getElementById("status").innerHTML= "Jogo carregando";
+}
 
 function draw(){
-
+  if (game_status == "start") {
   if(scoreRightWrist > 0.2) {
     fill("pink");
     stroke("purple");
     circle(rightWristX, rightWristY, 20);
   }
-  
   background(0); 
 
   fill("black");
@@ -99,6 +104,7 @@ function draw(){
 
   //Chamar a função move() (muito importante para o jogo)
   move();
+  }
 }
 
 
